@@ -1,0 +1,1010 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>師資生學習歷程資料表單</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --ink-muted: #4a4a6a;
+    --ink-light: #8888aa;
+    --paper: #faf9f7;
+    --paper-warm: #f3f0ea;
+    --paper-section: #edeae2;
+    --accent: #3b4fa0;
+    --accent-light: #e8ebf8;
+    --accent-mid: #8b98d4;
+    --red: #8b1a1a;
+    --border: #d0ccc0;
+    --border-strong: #a09890;
+    --success: #2d6a4f;
+    --success-bg: #e8f5ef;
+    --radius: 4px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 300;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .page-header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      45deg, transparent, transparent 20px,
+      rgba(255,255,255,0.015) 20px, rgba(255,255,255,0.015) 21px
+    );
+  }
+  .page-header h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    position: relative;
+  }
+  .page-header .subtitle {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.08em;
+    margin-top: 0.4rem;
+    position: relative;
+  }
+  .header-line {
+    width: 40px;
+    height: 2px;
+    background: var(--accent-mid);
+    margin: 1rem auto 0;
+    position: relative;
+  }
+
+  .form-container {
+    max-width: 860px;
+    margin: 2.5rem auto;
+    padding: 0 1.25rem 4rem;
+  }
+
+  .section {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  .section-header {
+    background: var(--ink);
+    color: white;
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .section-header .section-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent-mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+  }
+
+  .section-body { padding: 1.25rem; }
+
+  .field-grid {
+    display: grid;
+    gap: 1rem;
+  }
+  .field-grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .field-grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .field-grid-4 { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 600px) {
+    .field-grid-3, .field-grid-2, .field-grid-4 { grid-template-columns: 1fr; }
+  }
+
+  label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.35rem;
+    font-weight: 400;
+  }
+
+  input[type="text"], input[type="number"], input[type="date"],
+  select, textarea {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.5rem 0.65rem;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 0.88rem;
+    color: var(--ink);
+    background: var(--paper);
+    transition: border-color 0.15s, background 0.15s;
+    appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(59,79,160,0.08);
+  }
+  textarea { resize: vertical; min-height: 70px; line-height: 1.6; }
+
+  .radio-group {
+    display: flex;
+    gap: 1.5rem;
+    padding-top: 0.4rem;
+    flex-wrap: wrap;
+  }
+  .radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0;
+    cursor: pointer;
+    font-size: 0.88rem;
+    color: var(--ink);
+  }
+  input[type="radio"] {
+    accent-color: var(--accent);
+    width: 15px;
+    height: 15px;
+  }
+
+  /* Sub-section */
+  .sub-section {
+    border: 1px solid var(--paper-section);
+    border-radius: var(--radius);
+    background: var(--paper);
+    margin-top: 1rem;
+    overflow: hidden;
+  }
+  .sub-header {
+    background: var(--paper-section);
+    padding: 0.5rem 1rem;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--ink-muted);
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .sub-body { padding: 1rem; }
+
+  /* Repeatable rows */
+  .row-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+  .row-table th {
+    text-align: left;
+    padding: 0.4rem 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: var(--ink-light);
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .row-table td {
+    padding: 0.3rem 0.4rem;
+    vertical-align: middle;
+  }
+  .row-table tr:not(:last-child) td {
+    border-bottom: 1px solid var(--paper-section);
+  }
+  .row-table input {
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.82rem;
+    width: 100%;
+    background: white;
+    color: var(--ink);
+    font-family: 'Noto Sans TC', sans-serif;
+  }
+  .row-table input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(59,79,160,0.08);
+  }
+  .row-table select {
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.82rem;
+    width: 100%;
+    background: white;
+    color: var(--ink);
+    font-family: 'Noto Sans TC', sans-serif;
+    appearance: none;
+  }
+  .row-table select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .add-row-btn {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 0.78rem;
+    color: var(--accent);
+    background: var(--accent-light);
+    border: 1px dashed var(--accent-mid);
+    border-radius: 3px;
+    padding: 0.35rem 0.8rem;
+    cursor: pointer;
+    margin-top: 0.6rem;
+    transition: background 0.15s;
+  }
+  .add-row-btn:hover { background: #d4d9f0; }
+
+  .remove-btn {
+    background: none;
+    border: none;
+    color: var(--ink-light);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0 0.2rem;
+    line-height: 1;
+    transition: color 0.15s;
+  }
+  .remove-btn:hover { color: var(--red); }
+
+  /* Pass/Fail badge */
+  .badge-select {
+    font-size: 0.78rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--ink);
+    width: 100%;
+    font-family: 'Noto Sans TC', sans-serif;
+  }
+
+  /* Divider */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--paper-section);
+    margin: 1.25rem 0;
+  }
+
+  /* Submit area */
+  .submit-area {
+    margin-top: 2rem;
+  }
+
+  .gs-config {
+    background: var(--accent-light);
+    border: 1px solid var(--accent-mid);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .gs-config h3 {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .gs-config .hint {
+    font-size: 0.73rem;
+    color: var(--ink-muted);
+    margin-top: 0.4rem;
+    line-height: 1.6;
+  }
+  .gs-config a { color: var(--accent); }
+
+  .submit-btn {
+    width: 100%;
+    background: var(--ink);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.9rem;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .submit-btn:hover { background: var(--accent); }
+  .submit-btn:active { transform: scale(0.99); }
+  .submit-btn:disabled { background: var(--ink-light); cursor: not-allowed; }
+
+  .status-msg {
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+    display: none;
+  }
+  .status-msg.success {
+    background: var(--success-bg);
+    color: var(--success);
+    border: 1px solid #a8d5be;
+    display: block;
+  }
+  .status-msg.error {
+    background: #fdf0f0;
+    color: var(--red);
+    border: 1px solid #e8b4b4;
+    display: block;
+  }
+
+  /* Notice box */
+  .notice {
+    background: #fffbf0;
+    border: 1px solid #e8d080;
+    border-radius: var(--radius);
+    padding: 0.65rem 1rem;
+    font-size: 0.78rem;
+    color: #7a6020;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+
+  .field-hint {
+    font-size: 0.7rem;
+    color: var(--ink-light);
+    margin-top: 0.25rem;
+  }
+
+  .semester-tag {
+    display: inline-block;
+    background: var(--paper-section);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.72rem;
+    color: var(--ink-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .check-pair {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>師資生學習歷程資料</h1>
+  <div class="subtitle">國立臺灣海洋大學師資培育中心</div>
+  <div class="header-line"></div>
+</div>
+
+<div class="form-container">
+  <form id="mainForm" novalidate>
+
+    <!-- 1. 基本資料 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">一</div>
+        <h2>師資生入學資料</h2>
+      </div>
+      <div class="section-body">
+        <div class="field-grid field-grid-3">
+          <div>
+            <label>姓名</label>
+            <input type="text" name="姓名" placeholder="請輸入姓名" required>
+          </div>
+          <div>
+            <label>學號</label>
+            <input type="text" name="學號" placeholder="請輸入學號">
+          </div>
+          <div>
+            <label>學系</label>
+            <input type="text" name="學系" placeholder="請輸入學系">
+          </div>
+        </div>
+        <div class="field-grid field-grid-2" style="margin-top:1rem">
+          <div>
+            <label>取得師資生資格學年度</label>
+            <input type="text" name="取得師資生資格學年度" placeholder="例：112">
+          </div>
+          <div>
+            <label>師資類科</label>
+            <div class="radio-group">
+              <label><input type="radio" name="師資類科" value="中等學校"> 中等學校</label>
+              <label><input type="radio" name="師資類科" value="國民小學"> 國民小學</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. 預修階段 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">二</div>
+        <h2>修課與學習歷程 — 預修階段</h2>
+      </div>
+      <div class="section-body">
+        <div class="notice">
+          預修至多抵免教育專業課程 1/4。修課年限：甄選錄取後至少 3 學期。
+        </div>
+        <div id="preCoursesContainer">
+          <table class="row-table" id="preCourseTable">
+            <thead>
+              <tr>
+                <th style="width:16%">學期別</th>
+                <th>修課名稱 (一)</th>
+                <th style="width:10%">成績</th>
+                <th style="width:8%">學分</th>
+                <th>修課名稱 (二)</th>
+                <th style="width:10%">成績</th>
+                <th style="width:8%">學分</th>
+                <th style="width:32px"></th>
+              </tr>
+            </thead>
+            <tbody id="preCourseRows"></tbody>
+          </table>
+          <button type="button" class="add-row-btn" onclick="addCourseRow('preCourseRows', 'pre')">＋ 新增學期</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. 師資生階段 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">三</div>
+        <h2>修課與學習歷程 — 師資生階段</h2>
+      </div>
+      <div class="section-body">
+        <div class="notice">
+          每學期至少修教育專業課程 2 學分，至修畢為止。請留意相關擋修規定。
+        </div>
+        <table class="row-table">
+          <thead>
+            <tr>
+              <th style="width:16%">學期別</th>
+              <th>修課名稱 (一)</th>
+              <th style="width:10%">成績</th>
+              <th style="width:8%">學分</th>
+              <th>修課名稱 (二)</th>
+              <th style="width:10%">成績</th>
+              <th style="width:8%">學分</th>
+              <th style="width:32px"></th>
+            </tr>
+          </thead>
+          <tbody id="mainCourseRows"></tbody>
+        </table>
+        <button type="button" class="add-row-btn" onclick="addCourseRow('mainCourseRows', 'main')">＋ 新增學期</button>
+      </div>
+    </div>
+
+    <!-- 4. 教學相關能力檢測 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">四</div>
+        <h2>教學相關能力檢測</h2>
+      </div>
+      <div class="section-body">
+        <div class="field-grid field-grid-3">
+          <!-- 教學演示 -->
+          <div class="sub-section">
+            <div class="sub-header">教學演示能力檢測</div>
+            <div class="sub-body">
+              <label>年度</label>
+              <input type="text" name="教學演示年度" placeholder="例：112">
+              <label style="margin-top:0.75rem">通過情形</label>
+              <select name="教學演示通過情形" class="badge-select">
+                <option value="">請選擇</option>
+                <option value="通過">通過</option>
+                <option value="未通過">未通過</option>
+                <option value="未參加">未參加</option>
+              </select>
+            </div>
+          </div>
+          <!-- 數位教學 -->
+          <div class="sub-section">
+            <div class="sub-header">數位教學能力檢測</div>
+            <div class="sub-body">
+              <label>年度</label>
+              <input type="text" name="數位教學年度" placeholder="例：112">
+              <label style="margin-top:0.75rem">通過情形</label>
+              <select name="數位教學通過情形" class="badge-select">
+                <option value="">請選擇</option>
+                <option value="通過">通過</option>
+                <option value="未通過">未通過</option>
+                <option value="未參加">未參加</option>
+              </select>
+            </div>
+          </div>
+          <!-- 學科知能 -->
+          <div class="sub-section">
+            <div class="sub-header">學科知能檢測（小學）</div>
+            <div class="sub-body">
+              <label>年度</label>
+              <input type="text" name="學科知能年度" placeholder="例：112">
+              <label style="margin-top:0.75rem">通過情形</label>
+              <select name="學科知能通過情形" class="badge-select">
+                <option value="">請選擇</option>
+                <option value="通過">通過</option>
+                <option value="未通過">未通過</option>
+                <option value="未參加">未參加</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. 教檢 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">五</div>
+        <h2>師資生教育專業知能檢定及教檢衝刺班</h2>
+      </div>
+      <div class="section-body">
+        <div class="field-grid field-grid-2">
+          <div>
+            <label>教育專業知能檢定參加情形</label>
+            <div class="radio-group" style="margin-bottom:0.5rem">
+              <label><input type="radio" name="教檢參加" value="是" onclick="toggleField('教檢年份', true)"> 是</label>
+              <label><input type="radio" name="教檢參加" value="否" onclick="toggleField('教檢年份', false)"> 否</label>
+            </div>
+            <input type="text" name="教檢年份" id="教檢年份" placeholder="參加年份（例：112）" style="display:none">
+          </div>
+          <div>
+            <label>教檢衝刺班參加情形</label>
+            <div class="radio-group" style="margin-bottom:0.5rem">
+              <label><input type="radio" name="衝刺班參加" value="是" onclick="toggleField('衝刺班年份', true)"> 是</label>
+              <label><input type="radio" name="衝刺班參加" value="否" onclick="toggleField('衝刺班年份', false)"> 否</label>
+            </div>
+            <input type="text" name="衝刺班年份" id="衝刺班年份" placeholder="參加年份（例：112）" style="display:none">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. 生涯相關證照 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">六</div>
+        <h2>生涯相關證照</h2>
+      </div>
+      <div class="section-body">
+        <div class="field-hint" style="margin-bottom:0.75rem">例：語文檢定、公職考試等</div>
+        <div class="field-grid field-grid-2">
+          <div class="sub-section">
+            <div class="sub-header">證照 1</div>
+            <div class="sub-body">
+              <label>證照名稱</label>
+              <input type="text" name="證照1名稱" placeholder="請輸入證照名稱">
+              <label style="margin-top:0.75rem">取得年月</label>
+              <input type="text" name="證照1年月" placeholder="例：112年6月">
+            </div>
+          </div>
+          <div class="sub-section">
+            <div class="sub-header">證照 2</div>
+            <div class="sub-body">
+              <label>證照名稱</label>
+              <input type="text" name="證照2名稱" placeholder="請輸入證照名稱">
+              <label style="margin-top:0.75rem">取得年月</label>
+              <input type="text" name="證照2年月" placeholder="例：112年6月">
+            </div>
+          </div>
+          <div class="sub-section">
+            <div class="sub-header">證照 3</div>
+            <div class="sub-body">
+              <label>證照名稱</label>
+              <input type="text" name="證照3名稱" placeholder="請輸入證照名稱">
+              <label style="margin-top:0.75rem">取得年月</label>
+              <input type="text" name="證照3年月" placeholder="例：112年6月">
+            </div>
+          </div>
+          <div class="sub-section">
+            <div class="sub-header">證照 4</div>
+            <div class="sub-body">
+              <label>證照名稱</label>
+              <input type="text" name="證照4名稱" placeholder="請輸入證照名稱">
+              <label style="margin-top:0.75rem">取得年月</label>
+              <input type="text" name="證照4年月" placeholder="例：112年6月">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. 檢定考試 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">七</div>
+        <h2>檢定考試</h2>
+      </div>
+      <div class="section-body">
+        <table class="row-table">
+          <thead>
+            <tr>
+              <th style="width:40%">年度</th>
+              <th>通過與否</th>
+              <th style="width:32px"></th>
+            </tr>
+          </thead>
+          <tbody id="examRows"></tbody>
+        </table>
+        <button type="button" class="add-row-btn" onclick="addExamRow()">＋ 新增年度</button>
+      </div>
+    </div>
+
+    <!-- 8. 教育實習 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">八</div>
+        <h2>教育實習</h2>
+      </div>
+      <div class="section-body">
+        <div class="field-grid field-grid-2">
+          <div>
+            <label>學期</label>
+            <input type="text" name="實習學期" placeholder="例：112學年度第2學期">
+          </div>
+          <div>
+            <label>實習學校</label>
+            <input type="text" name="實習學校" placeholder="請輸入實習學校名稱">
+          </div>
+          <div>
+            <label>實習指導教授</label>
+            <input type="text" name="實習指導教授" placeholder="請輸入指導教授姓名">
+          </div>
+          <div>
+            <label>實習輔導老師</label>
+            <input type="text" name="實習輔導老師" placeholder="請輸入輔導老師姓名">
+          </div>
+          <div>
+            <label>實習成績</label>
+            <input type="text" name="實習成績" placeholder="例：優等 / 良好 / 95">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. 就業追蹤 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">九</div>
+        <h2>就業追蹤</h2>
+      </div>
+      <div class="section-body">
+        <table class="row-table">
+          <thead>
+            <tr>
+              <th style="width:25%">年度</th>
+              <th>服務機關</th>
+              <th style="width:25%">職稱</th>
+              <th style="width:32px"></th>
+            </tr>
+          </thead>
+          <tbody id="jobRows"></tbody>
+        </table>
+        <button type="button" class="add-row-btn" onclick="addJobRow()">＋ 新增紀錄</button>
+      </div>
+    </div>
+
+    <!-- Google Sheets 設定 + 送出 -->
+    <input type="hidden" id="gsUrl" value="https://script.google.com/macros/s/AKfycbxsKpanKlYhgWbBKVIUbQSAmW8n4FI7N98ljzB0dO7SEXVYWcF0PiXBmrCC0qC8wsag/exec">
+    <div class="submit-area">
+      <div class="gs-config">
+        <div style="display:flex;align-items:center;gap:0.6rem;">
+          <span style="font-size:1.1rem;">📊</span>
+          <span style="font-size:0.85rem;font-weight:500;color:var(--success);">已連結 Google 試算表，填寫完成後直接送出即可。</span>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">送出學習歷程資料</button>
+      <div id="statusMsg" class="status-msg"></div>
+      <div id="dataSummary" style="display:none;margin-top:1.25rem;"></div>
+    </div>
+
+  </form>
+</div>
+
+<script>
+// ---- Dynamic row builders ----
+
+let preCnt = 0, mainCnt = 0, examCnt = 0, jobCnt = 0;
+
+function semesterOptions(prefix) {
+  const opts = [];
+  for (let y = 108; y <= 120; y++) {
+    opts.push(`<option>${y}學年度第1學期</option>`);
+    opts.push(`<option>${y}學年度第2學期</option>`);
+  }
+  return opts.join('');
+}
+
+function addCourseRow(tbodyId, prefix) {
+  const cnt = (prefix === 'pre') ? ++preCnt : ++mainCnt;
+  const key = prefix + '_' + cnt;
+  const tbody = document.getElementById(tbodyId);
+  const tr = document.createElement('tr');
+  tr.id = 'cr_' + key;
+  tr.innerHTML = `
+    <td>
+      <select name="${key}_sem" style="font-size:0.78rem;padding:0.3rem 0.4rem;border:1px solid var(--border);border-radius:3px;width:100%;background:white;color:var(--ink);font-family:'Noto Sans TC',sans-serif;">
+        <option value="">選擇學期</option>
+        ${semesterOptions(key)}
+      </select>
+    </td>
+    <td><input type="text" name="${key}_c1" placeholder="課程名稱"></td>
+    <td><input type="text" name="${key}_g1" placeholder="成績" style="width:60px"></td>
+    <td><input type="number" name="${key}_cr1" placeholder="學分" min="0" max="6" style="width:48px"></td>
+    <td><input type="text" name="${key}_c2" placeholder="課程名稱"></td>
+    <td><input type="text" name="${key}_g2" placeholder="成績" style="width:60px"></td>
+    <td><input type="number" name="${key}_cr2" placeholder="學分" min="0" max="6" style="width:48px"></td>
+    <td><button type="button" class="remove-btn" onclick="removeRow('cr_${key}')">✕</button></td>
+  `;
+  tbody.appendChild(tr);
+}
+
+function addExamRow() {
+  const cnt = ++examCnt;
+  const key = 'exam_' + cnt;
+  const tbody = document.getElementById('examRows');
+  const tr = document.createElement('tr');
+  tr.id = key;
+  tr.innerHTML = `
+    <td><input type="text" name="${key}_yr" placeholder="例：112"></td>
+    <td>
+      <select name="${key}_pass" style="font-size:0.82rem;padding:0.3rem 0.5rem;border:1px solid var(--border);border-radius:3px;width:100%;background:white;color:var(--ink);font-family:'Noto Sans TC',sans-serif;">
+        <option value="">請選擇</option>
+        <option>通過</option>
+        <option>未通過</option>
+        <option>缺考</option>
+      </select>
+    </td>
+    <td><button type="button" class="remove-btn" onclick="removeRow('${key}')">✕</button></td>
+  `;
+  tbody.appendChild(tr);
+}
+
+function addJobRow() {
+  const cnt = ++jobCnt;
+  const key = 'job_' + cnt;
+  const tbody = document.getElementById('jobRows');
+  const tr = document.createElement('tr');
+  tr.id = key;
+  tr.innerHTML = `
+    <td><input type="text" name="${key}_yr" placeholder="例：113"></td>
+    <td><input type="text" name="${key}_org" placeholder="服務機關名稱"></td>
+    <td><input type="text" name="${key}_title" placeholder="職稱"></td>
+    <td><button type="button" class="remove-btn" onclick="removeRow('${key}')">✕</button></td>
+  `;
+  tbody.appendChild(tr);
+}
+
+function removeRow(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+function toggleField(id, show) {
+  const el = document.getElementById(id);
+  el.style.display = show ? 'block' : 'none';
+}
+
+// Add default rows on load
+addCourseRow('preCourseRows', 'pre');
+addCourseRow('mainCourseRows', 'main');
+addExamRow();
+addJobRow();
+
+// ---- Form collection ----
+
+function collectFormData() {
+  const form = document.getElementById('mainForm');
+  const data = {};
+
+  // Named inputs / selects / radios
+  const elements = form.elements;
+  for (let el of elements) {
+    if (!el.name || el.name === '') continue;
+    if (el.type === 'radio') {
+      if (el.checked) data[el.name] = el.value;
+    } else if (el.type !== 'submit' && el.type !== 'button') {
+      if (el.value !== '') data[el.name] = el.value;
+    }
+  }
+
+  // Flatten course rows
+  ['pre', 'main'].forEach(prefix => {
+    const rows = [];
+    const tbody = document.getElementById(prefix === 'pre' ? 'preCourseRows' : 'mainCourseRows');
+    tbody.querySelectorAll('tr').forEach(tr => {
+      const sem = tr.querySelector('select') ? tr.querySelector('select').value : '';
+      const inputs = tr.querySelectorAll('input');
+      if (inputs.length >= 6) {
+        rows.push({
+          學期: sem,
+          課程一: inputs[0].value,
+          成績一: inputs[1].value,
+          學分一: inputs[2].value,
+          課程二: inputs[3].value,
+          成績二: inputs[4].value,
+          學分二: inputs[5].value
+        });
+      }
+    });
+    data[(prefix === 'pre' ? '預修' : '師資生') + '修課紀錄'] = JSON.stringify(rows);
+  });
+
+  // Exam rows
+  const exams = [];
+  document.getElementById('examRows').querySelectorAll('tr').forEach(tr => {
+    const inputs = tr.querySelectorAll('input');
+    const selects = tr.querySelectorAll('select');
+    if (inputs.length && selects.length) {
+      exams.push({ 年度: inputs[0].value, 通過與否: selects[0].value });
+    }
+  });
+  data['檢定考試紀錄'] = JSON.stringify(exams);
+
+  // Job rows
+  const jobs = [];
+  document.getElementById('jobRows').querySelectorAll('tr').forEach(tr => {
+    const inputs = tr.querySelectorAll('input');
+    if (inputs.length >= 3) {
+      jobs.push({ 年度: inputs[0].value, 服務機關: inputs[1].value, 職稱: inputs[2].value });
+    }
+  });
+  data['就業追蹤紀錄'] = JSON.stringify(jobs);
+
+  data['填寫時間'] = new Date().toLocaleString('zh-TW');
+  return data;
+}
+
+
+// ---- Data summary display ----
+function showDataSummary(data) {
+  const box = document.getElementById('dataSummary');
+  const ignore = ['填寫時間'];
+  const sectionMap = {
+    '姓名': '基本資料', '學號': '基本資料', '學系': '基本資料',
+    '取得師資生資格學年度': '基本資料', '師資類科': '基本資料',
+    '教學演示年度': '能力檢測', '教學演示通過情形': '能力檢測',
+    '數位教學年度': '能力檢測', '數位教學通過情形': '能力檢測',
+    '學科知能年度': '能力檢測', '學科知能通過情形': '能力檢測',
+    '教檢參加': '教檢', '教檢年份': '教檢', '衝刺班參加': '教檢', '衝刺班年份': '教檢',
+    '證照1名稱': '生涯證照', '證照1年月': '生涯證照', '證照2名稱': '生涯證照', '證照2年月': '生涯證照',
+    '證照3名稱': '生涯證照', '證照3年月': '生涯證照', '證照4名稱': '生涯證照', '證照4年月': '生涯證照',
+    '實習學期': '教育實習', '實習學校': '教育實習', '實習指導教授': '教育實習',
+    '實習輔導老師': '教育實習', '實習成績': '教育實習',
+    '預修修課紀錄': '修課紀錄', '師資生修課紀錄': '修課紀錄',
+    '檢定考試紀錄': '檢定考試', '就業追蹤紀錄': '就業追蹤'
+  };
+
+  const sections = {};
+  for (const [k, v] of Object.entries(data)) {
+    if (ignore.includes(k) || !v) continue;
+    const sec = sectionMap[k] || '其他';
+    if (!sections[sec]) sections[sec] = [];
+    // Pretty print JSON arrays
+    let display = v;
+    try {
+      const parsed = JSON.parse(v);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        display = parsed.map(r => Object.entries(r).filter(([,val])=>val).map(([key,val])=>`${key}: ${val}`).join('　')).join(' / ');
+      } else if (Array.isArray(parsed) && parsed.length === 0) {
+        continue;
+      }
+    } catch(e) {}
+    sections[sec].push([k, display]);
+  }
+
+  let html = `<div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;font-size:0.83rem;">
+    <div style="background:var(--ink);color:white;padding:0.6rem 1rem;font-family:'Noto Serif TC',serif;font-size:0.9rem;letter-spacing:0.08em;">已上傳的資料摘要</div>
+    <div style="padding:1rem;display:grid;gap:1rem;">`;
+
+  for (const [sec, rows] of Object.entries(sections)) {
+    html += `<div><div style="font-size:0.72rem;font-weight:500;color:var(--ink-muted);letter-spacing:0.06em;margin-bottom:0.4rem;border-bottom:1px solid var(--border);padding-bottom:0.3rem;">${sec}</div>`;
+    html += `<table style="width:100%;border-collapse:collapse;">`;
+    for (const [k, v] of rows) {
+      html += `<tr><td style="color:var(--ink-light);width:40%;padding:2px 8px 2px 0;vertical-align:top;">${k}</td><td style="color:var(--ink);padding:2px 0;">${v}</td></tr>`;
+    }
+    html += `</table></div>`;
+  }
+
+  html += `<div style="font-size:0.72rem;color:var(--ink-light);text-align:right;">填寫時間：${data['填寫時間'] || ''}</div>`;
+  html += `</div></div>`;
+
+  box.innerHTML = html;
+  box.style.display = 'block';
+  box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ---- Submit ----
+
+document.getElementById('mainForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const url = document.getElementById('gsUrl').value.trim();
+  const statusMsg = document.getElementById('statusMsg');
+  const btn = document.getElementById('submitBtn');
+
+  statusMsg.className = 'status-msg';
+  statusMsg.style.display = 'none';
+
+  if (!url) {
+    statusMsg.textContent = '請先填入 Google Apps Script 網址。';
+    statusMsg.className = 'status-msg error';
+    return;
+  }
+
+  const data = collectFormData();
+  if (!data['姓名']) {
+    statusMsg.textContent = '請至少填寫姓名後再送出。';
+    statusMsg.className = 'status-msg error';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '上傳中⋯';
+
+  try {
+    // Use FormData + no-cors to avoid CORS preflight issues with Apps Script
+    const formData = new FormData();
+    formData.append('payload', JSON.stringify(data));
+
+    await fetch(url, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: formData
+    });
+
+    // no-cors always returns opaque response; assume success if no exception thrown
+    statusMsg.textContent = '✓ 資料已成功上傳至 Google 試算表！';
+    statusMsg.className = 'status-msg success';
+    showDataSummary(data);
+  } catch (err) {
+    statusMsg.textContent = '網路錯誤，請確認網路連線後再試。錯誤：' + err.message;
+    statusMsg.className = 'status-msg error';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '送出學習歷程資料';
+  }
+});
+</script>
+</body>
+</html>
