@@ -737,6 +737,7 @@
       <button type="submit" class="submit-btn" id="submitBtn">送出學習歷程資料</button>
       <div id="statusMsg" class="status-msg"></div>
       <div id="dataSummary" style="display:none;margin-top:1.25rem;"></div>
+      <button type="button" id="pdfBtn" onclick="downloadPDF()" style="display:none;margin-top:1rem;width:100%;background:var(--accent);color:white;border:none;border-radius:var(--radius);padding:0.75rem;font-family:'Noto Serif TC',serif;font-size:0.95rem;font-weight:500;letter-spacing:0.1em;cursor:pointer;transition:background 0.15s;">⬇ 下載 PDF 報表</button>
     </div>
 
   </form>
@@ -997,6 +998,7 @@ document.getElementById('mainForm').addEventListener('submit', async (e) => {
     statusMsg.textContent = '✓ 資料已成功上傳至 Google 試算表！';
     statusMsg.className = 'status-msg success';
     showDataSummary(data);
+    document.getElementById('pdfBtn').style.display = 'block';
   } catch (err) {
     statusMsg.textContent = '網路錯誤，請確認網路連線後再試。錯誤：' + err.message;
     statusMsg.className = 'status-msg error';
@@ -1005,6 +1007,108 @@ document.getElementById('mainForm').addEventListener('submit', async (e) => {
     btn.textContent = '送出學習歷程資料';
   }
 });
+
+// ---- PDF Download ----
+function downloadPDF() {
+  const btn = document.getElementById('pdfBtn');
+  btn.textContent = '產生中，請稍候⋯';
+  btn.disabled = true;
+
+  // Collect current form data for PDF rendering
+  const data = collectFormData();
+  const name = data['姓名'] || '師資生';
+
+  // Build a clean print-friendly HTML document
+  const sectionMap = {
+    '姓名': '基本資料', '學號': '基本資料', '學系': '基本資料',
+    '取得師資生資格學年度': '基本資料', '師資類科': '基本資料',
+    '教學演示年度': '能力檢測', '教學演示通過情形': '能力檢測',
+    '數位教學年度': '能力檢測', '數位教學通過情形': '能力檢測',
+    '學科知能年度': '能力檢測', '學科知能通過情形': '能力檢測',
+    '教檢參加': '教檢資訊', '教檢年份': '教檢資訊', '衝刺班參加': '教檢資訊', '衝刺班年份': '教檢資訊',
+    '證照1名稱': '生涯證照', '證照1年月': '生涯證照', '證照2名稱': '生涯證照', '證照2年月': '生涯證照',
+    '證照3名稱': '生涯證照', '證照3年月': '生涯證照', '證照4名稱': '生涯證照', '證照4年月': '生涯證照',
+    '實習學期': '教育實習', '實習學校': '教育實習', '實習指導教授': '教育實習',
+    '實習輔導老師': '教育實習', '實習成績': '教育實習',
+    '預修修課紀錄': '修課紀錄', '師資生修課紀錄': '修課紀錄',
+    '檢定考試紀錄': '檢定考試', '就業追蹤紀錄': '就業追蹤'
+  };
+
+  const sections = {};
+  for (const [k, v] of Object.entries(data)) {
+    if (k === '填寫時間' || !v) continue;
+    const sec = sectionMap[k] || '其他';
+    if (!sections[sec]) sections[sec] = [];
+    let display = v;
+    try {
+      const parsed = JSON.parse(v);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        display = parsed.map(r =>
+          Object.entries(r).filter(([,val]) => val)
+            .map(([key, val]) => `${key}：${val}`).join('　')
+        ).join('<br>');
+      } else if (Array.isArray(parsed)) { continue; }
+    } catch(e) {}
+    sections[sec].push([k, display]);
+  }
+
+  let sectionsHTML = '';
+  for (const [sec, rows] of Object.entries(sections)) {
+    sectionsHTML += `<div class="section-block">
+      <div class="sec-title">${sec}</div>
+      <table>
+        ${rows.map(([k,v]) => `<tr><td class="label">${k}</td><td class="value">${v}</td></tr>`).join('')}
+      </table>
+    </div>`;
+  }
+
+  const printHTML = `<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@300;400;500&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans TC', sans-serif; font-size: 11pt; color: #1a1a2e; background: white; padding: 2cm; }
+  .header { text-align: center; border-bottom: 2px solid #1a1a2e; padding-bottom: 1rem; margin-bottom: 1.5rem; }
+  .header h1 { font-family: 'Noto Serif TC', serif; font-size: 16pt; font-weight: 700; letter-spacing: 0.12em; }
+  .header .sub { font-size: 9pt; color: #666; margin-top: 0.3rem; letter-spacing: 0.08em; }
+  .header .ts { font-size: 8pt; color: #999; margin-top: 0.2rem; }
+  .section-block { margin-bottom: 1.25rem; break-inside: avoid; }
+  .sec-title { font-size: 9pt; font-weight: 500; color: #3b4fa0; letter-spacing: 0.08em; border-bottom: 1px solid #d0ccc0; padding-bottom: 0.25rem; margin-bottom: 0.5rem; text-transform: uppercase; }
+  table { width: 100%; border-collapse: collapse; }
+  tr { border-bottom: 0.5px solid #edeae2; }
+  td { padding: 4px 6px; vertical-align: top; font-size: 10pt; line-height: 1.5; }
+  td.label { color: #666; width: 38%; font-size: 9pt; }
+  td.value { color: #1a1a2e; font-weight: 400; }
+  .footer { margin-top: 2rem; border-top: 1px solid #d0ccc0; padding-top: 0.5rem; font-size: 8pt; color: #999; text-align: right; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>師資生學習歷程資料</h1>
+  <div class="sub">國立臺灣海洋大學師資培育中心</div>
+  <div class="ts">列印時間：${data['填寫時間'] || new Date().toLocaleString('zh-TW')}</div>
+</div>
+${sectionsHTML}
+<div class="footer">國立臺灣海洋大學師資培育中心　師資生學習歷程資料表</div>
+</body>
+</html>`;
+
+  // Open print window
+  const win = window.open('', '_blank', 'width=800,height=900');
+  win.document.write(printHTML);
+  win.document.close();
+
+  win.onload = function() {
+    setTimeout(() => {
+      win.print();
+      btn.textContent = '⬇ 下載 PDF 報表';
+      btn.disabled = false;
+    }, 800);
+  };
+}
+
 </script>
 </body>
 </html>
