@@ -143,31 +143,27 @@
 </div>
 
 <script>
-    // ⚠️ 請將下方單引號內的網址，替換成你的 Google Apps Script 部署網址 ⚠️
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbz_XXXXXXXXXXXXXX/exec';
+    // 這裡已經為您替換上專屬的 GAS 網址！
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbyG1b5rHAKzm8s_2EMWo1ygWm2hCzaTZWQbqqnhnIDLK84YnDo1C1_OpVNHVMAaohcY/exec';
 
     const form = document.getElementById('worksheet-form');
     const submitBtn = document.getElementById('submit-btn');
     const successMessage = document.getElementById('success-message');
 
     form.addEventListener('submit', function(e) {
-        e.preventDefault(); // 防止表單重新整理頁面
+        e.preventDefault(); 
         
-        // 更改按鈕狀態
         submitBtn.textContent = '⏳ 傳送中...';
         submitBtn.disabled = true;
 
-        // 收集表單資料
         const formData = new FormData(form);
 
-        // 使用 fetch API 傳送 POST 請求給 GAS
         fetch(GAS_URL, {
             method: 'POST',
-            body: new URLSearchParams(formData) // 轉換格式以避免跨網域 (CORS) 問題
+            body: new URLSearchParams(formData) 
         })
         .then(response => {
             if(response.ok) {
-                // 成功後的畫面處理
                 form.style.display = 'none';
                 successMessage.style.display = 'block';
             } else {
@@ -178,7 +174,7 @@
         })
         .catch(error => {
             console.error('Error!', error.message);
-            alert('傳送失敗，請確認你的網路連線或 GAS 網址是否正確。');
+            alert('傳送失敗，請確認您的網路連線。');
             submitBtn.textContent = '🚀 送出學習單';
             submitBtn.disabled = false;
         });
