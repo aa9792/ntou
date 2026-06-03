@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ 紙電路實作學習單</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background-color: #ffffff;
+            max-width: 500px;
+            width: 100%;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #34495e;
+        }
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        .radio-group {
+            display: flex;
+            gap: 15px;
+        }
+        .radio-group label {
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        button {
+            width: 100%;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        #success-message {
+            display: none;
+            text-align: center;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>⚡ 紙電路實作學習單</h1>
+    <form id="worksheet-form">
+        
+        <div class="form-group">
+            <label for="seatNumber">👤 班級座號 (例：701-05)</label>
+            <input type="text" id="seatNumber" name="seatNumber" required placeholder="請輸入班級與座號">
+        </div>
+
+        <div class="form-group">
+            <label for="studentName">📝 學生姓名</label>
+            <input type="text" id="studentName" name="studentName" required placeholder="請輸入你的姓名">
+        </div>
+
+        <div class="form-group">
+            <label for="ledColor">💡 你使用的 LED 顏色是？</label>
+            <select id="ledColor" name="ledColor" required>
+                <option value="" disabled selected>請選擇顏色...</option>
+                <option value="紅色">🔴 紅色</option>
+                <option value="藍色">🔵 藍色</option>
+                <option value="綠色">🟢 綠色</option>
+                <option value="黃色">🟡 黃色</option>
+                <option value="白色">⚪ 白色</option>
+                <option value="其他">🌈 其他</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>✨ 你的紙電路最後有成功發光嗎？</label>
+            <div class="radio-group">
+                <label><input type="radio" name="isSuccess" value="是，大成功！" required> 是，大成功！ 🤩</label>
+                <label><input type="radio" name="isSuccess" value="沒有，還差一點"> 沒有，還差一點 😢</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="feedback">🤔 實作過程中遇到什麼困難？你學到了什麼？</label>
+            <textarea id="feedback" name="feedback" required placeholder="請簡短分享你的反思與心得..."></textarea>
+        </div>
+
+        <button type="submit" id="submit-btn">🚀 送出學習單</button>
+    </form>
+
+    <div id="success-message">
+        🎉 太棒了！你的學習單已成功送出！
+    </div>
+</div>
+
+<script>
+    // ⚠️ 請將下方單引號內的網址，替換成你的 Google Apps Script 部署網址 ⚠️
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbz_XXXXXXXXXXXXXX/exec';
+
+    const form = document.getElementById('worksheet-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const successMessage = document.getElementById('success-message');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault(); // 防止表單重新整理頁面
+        
+        // 更改按鈕狀態
+        submitBtn.textContent = '⏳ 傳送中...';
+        submitBtn.disabled = true;
+
+        // 收集表單資料
+        const formData = new FormData(form);
+
+        // 使用 fetch API 傳送 POST 請求給 GAS
+        fetch(GAS_URL, {
+            method: 'POST',
+            body: new URLSearchParams(formData) // 轉換格式以避免跨網域 (CORS) 問題
+        })
+        .then(response => {
+            if(response.ok) {
+                // 成功後的畫面處理
+                form.style.display = 'none';
+                successMessage.style.display = 'block';
+            } else {
+                alert('網路發生錯誤，請稍後再試！');
+                submitBtn.textContent = '🚀 送出學習單';
+                submitBtn.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Error!', error.message);
+            alert('傳送失敗，請確認你的網路連線或 GAS 網址是否正確。');
+            submitBtn.textContent = '🚀 送出學習單';
+            submitBtn.disabled = false;
+        });
+    });
+</script>
+
+</body>
+</html>
